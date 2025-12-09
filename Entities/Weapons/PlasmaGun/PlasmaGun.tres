@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="WeaponStats" load_steps=2 format=3 uid="uid://blf7645w11dpq"]
+
+[ext_resource type="Script" uid="uid://yh7xaw47478q" path="res://Entities/Weapons/weapon_stats.gd" id="1_phl2w"]
+
+[resource]
+script = ExtResource("1_phl2w")
+weapon_name = "Plasma Gun"
+damage = 50
+max_ammo = 30
+current_ammo = 30
+reload_time = 1.5
+fire_rate = 0.15
+bullet_velocity = 40.0
+ads_y_position = -0.11
+ads_z_position = -0.5
+ads_time = 0.4
+y_recoil_position = 0.5
+z_recoil_position = 1.0
+x_recoil_rotation = 2.0
+ads_y_recoil = 0.1
+ads_z_recoil = 1.0
+metadata/_custom_type_script = "uid://yh7xaw47478q"

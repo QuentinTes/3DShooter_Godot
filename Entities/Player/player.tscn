@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=3 uid="uid://ejq1d20v6poq"]
+
+[ext_resource type="Script" uid="uid://006y70pum4wm" path="res://Entities/Player/player.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://rt4tt0wg30pf" path="res://Entities/Player/Recoil.gd" id="2_i3pqv"]
+[ext_resource type="PackedScene" uid="uid://c3u81lsx03lht" path="res://Entities/Weapons/mp5/mp_5.tscn" id="3_btcbx"]
+[ext_resource type="Script" uid="uid://btdudrwt5bw7n" path="res://Entities/Player/pickup_component.gd" id="4_tekja"]
+[ext_resource type="Script" uid="uid://b0l1rvb7qbbuy" path="res://Entities/Player/weapon_manager.gd" id="5_5c2io"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_sh265"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_camera") groups=["Player"]]
+script = ExtResource("1_4flbx")
+walk_speed = 5.0
+run_speed = 7.5
+gravity = 20.0
+jump_impulse = 7.415
+sensitivity = 0.05
+base_fov = 75.0
+_camera = NodePath("Head/CameraRecoil/Camera3D")
+bob_frequency = 2.0
+bob_amplitude = 0.08
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_sh265")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_4flbx")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5680475, 0)
+
+[node name="CameraRecoil" type="Node3D" parent="Head"]
+script = ExtResource("2_i3pqv")
+recoil = Vector3(0.2, 0.1, 0)
+snappiness = 5.0
+returnSpeed = 20.0
+
+[node name="Camera3D" type="Camera3D" parent="Head/CameraRecoil"]
+
+[node name="WeaponHolder" type="Node3D" parent="Head/CameraRecoil/Camera3D"]
+transform = Transform3D(0.98718923, 0, -0.15955384, 0, 1, 0, 0.15955384, 0, 0.98718923, 0.40907893, -0.1994707, -0.5329538)
+
+[node name="MP5" parent="Head/CameraRecoil/Camera3D/WeaponHolder" instance=ExtResource("3_btcbx")]
+
+[node name="RayCast3D" type="RayCast3D" parent="Head/CameraRecoil/Camera3D"]
+target_position = Vector3(0, 0, -30)
+
+[node name="PickupComponent" type="Node3D" parent="." node_paths=PackedStringArray("ray")]
+script = ExtResource("4_tekja")
+ray = NodePath("../Head/CameraRecoil/Camera3D/RayCast3D")
+
+[node name="WeaponManager" type="Node3D" parent="." node_paths=PackedStringArray("weapon_holder")]
+script = ExtResource("5_5c2io")
+weapon_holder = NodePath("../Head/CameraRecoil/Camera3D/WeaponHolder")

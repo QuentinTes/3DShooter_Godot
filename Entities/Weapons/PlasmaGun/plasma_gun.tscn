@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://cfil7cknanit1"]
+
+[ext_resource type="Script" uid="uid://boo74sqaskcoo" path="res://Entities/Weapons/gun_script.gd" id="1_4qid6"]
+[ext_resource type="PackedScene" uid="uid://cy57kvufbhsnq" path="res://Entities/Weapons/PlasmaGun/plasma_gun_model.gltf" id="2_1yh3f"]
+[ext_resource type="PackedScene" uid="uid://cvinxm1xdbbh3" path="res://Entities/Weapons/plasma.tscn" id="2_ngtcl"]
+[ext_resource type="AudioStream" uid="uid://b7q3uy1ygx85h" path="res://Entities/Weapons/laserSmall_002.ogg" id="3_1yh3f"]
+[ext_resource type="Resource" uid="uid://blf7645w11dpq" path="res://Entities/Weapons/PlasmaGun/PlasmaGun.tres" id="3_6sk15"]
+
+[node name="PlasmaGun" type="Node3D" node_paths=PackedStringArray("muzzle", "fire_rate_timer", "audio")]
+script = ExtResource("1_4qid6")
+bullet = ExtResource("2_ngtcl")
+muzzle = NodePath("Muzzle")
+weapon_stats = ExtResource("3_6sk15")
+fire_rate_timer = NodePath("AutoFireRate")
+audio = NodePath("AudioStreamPlayer3D")
+
+[node name="GunModel" parent="." instance=ExtResource("2_1yh3f")]
+
+[node name="Muzzle" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04451998, -0.2187837)
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_1yh3f")
+volume_db = -40.0
+
+[node name="AutoFireRate" type="Timer" parent="."]
+wait_time = 0.15

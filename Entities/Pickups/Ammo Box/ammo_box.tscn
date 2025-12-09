@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://khmgo816fjj3"]
+
+[ext_resource type="Script" uid="uid://bpfp5eb0lebyl" path="res://Entities/Pickups/Ammo Box/ammo_box.gd" id="1_e48vv"]
+[ext_resource type="PackedScene" uid="uid://ddxedpm22tri4" path="res://Entities/Pickups/Ammo Box/Model/9mm_ammo_box.glb" id="1_gkn0e"]
+[ext_resource type="PackedScene" uid="uid://bgnb84v8hvji0" path="res://Entities/Pickups/pickup_area.tscn" id="3_k7l8a"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_e48vv"]
+height = 1.0415039
+
+[node name="AmmoBox" type="Node3D" node_paths=PackedStringArray("pickup_area") groups=["Pickable"]]
+script = ExtResource("1_e48vv")
+pickup_area = NodePath("PickupArea")
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_gkn0e")]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0, 0)
+
+[node name="PickupArea" parent="." instance=ExtResource("3_k7l8a")]
+script = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35809296, 0)
+shape = SubResource("CylinderShape3D_e48vv")
