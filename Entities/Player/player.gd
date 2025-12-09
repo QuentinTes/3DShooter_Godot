@@ -28,9 +28,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	speed = walk_speed
 
-
 func get_camera() -> Camera3D:
-	print("get_cam cam: ", _camera)
 	return _camera
 
 func _unhandled_input(event: InputEvent) -> void:

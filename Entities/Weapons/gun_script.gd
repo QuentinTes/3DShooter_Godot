@@ -10,6 +10,7 @@ const BULLET_HOLE = preload("uid://c88yjbgwbdo8o")
 @export var weapon_stats: WeaponStats
 @export var fire_rate_timer: Timer
 @export var audio: AudioStreamPlayer3D
+@export var hit_audio: AudioStreamPlayer3D
 @export var emitter: GPUParticles3D
 
 var bullet_holder: Node3D
@@ -23,13 +24,11 @@ var ads: bool = false
 var ray: RayCast3D
 var _camera: Camera3D
 var ui: UI
-
+var reloading: bool = false
 var max_total_ammo: int
 
-@onready var audio_stream_player_3d: AudioStreamPlayer3D = $AudioStreamPlayer3D
 @onready var camera_recoil: Node3D = $"../../.."
 @onready var weapon_holder: Node3D = $".."
-@onready var muzzle_flash: GPUParticles3D = $Muzzle/MuzzleFlash
 
 func _ready() -> void:
 	fire_rate_timer.timeout.connect(_auto_fire)
@@ -71,6 +70,7 @@ func _input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed("reload") && weapon_stats.total_ammo > 0:
 		ui.start_reload_ui(weapon_stats.reload_time)
+		reloading = true
 
 func _auto_fire() -> void:
 	if weapon_stats.projectiles:
@@ -87,10 +87,17 @@ func _reload_weapon() -> void:
 		weapon_stats.current_ammo = weapon_stats.total_ammo
 		weapon_stats.total_ammo = 0
 	ui.update_ammo_label(weapon_stats.current_ammo, weapon_stats.total_ammo)
+	reloading = false
+	print(weapon_start_rotation.z)
+	print(weapon_stats.base_rotation.z)
 
 func _physics_process(_delta: float) -> void:
-	position = lerp(position, weapon_start_position, .1)
-	rotation = lerp(rotation, weapon_start_rotation, .1)
+	if !reloading:
+		position = lerp(position, weapon_start_position, .1)
+		rotation = lerp(rotation, weapon_start_rotation, .1)
+	else:
+		position = lerp(position, Vector3(weapon_start_position.x, weapon_start_position.y -.25, weapon_start_position.z), .1)
+		rotation = lerp(rotation, Vector3(weapon_start_rotation.x, weapon_start_rotation.y, weapon_stats.base_rotation.z - .5), .1)
 	
 	if ads: 
 		weapon_holder.position = lerp(weapon_holder.position, weapon_stats.ads_position, weapon_stats.ads_time)
@@ -112,10 +119,18 @@ func fire_raycast() -> void:
 			if body.is_in_group("Enemy"):
 				var health: Node = body.get_node("HealthComponent")
 				health.take_damage(weapon_stats.damage)
+				_play_hit_sound()
 			else: 
 				_create_bullet_hole()
 		weapon_stats.current_ammo -= 1
 		ui.update_ammo_label(weapon_stats.current_ammo, weapon_stats.total_ammo)
+
+func _play_hit_sound() -> void:
+	var p = hit_audio.duplicate()
+	add_child(p)
+	p.play(.8)
+	p.connect("finished", p.queue_free)
+
 
 func fire_projectile() -> void:
 	var new_bullet: Area3D = bullet.instantiate()
@@ -130,15 +145,12 @@ func fire_projectile() -> void:
 
 func shoot_gun() -> void:
 	camera_recoil.recoilFire()
-	
-	if audio_stream_player_3d:
-		audio_stream_player_3d.play()
+	audio.play()
 	
 	if ads:
 		position = lerp(position, weapon_stats.ads_recoil_position, .1)
 	else: 
 		position = lerp(position, weapon_stats.recoil_position, .1)
-		print(weapon_start_rotation.y)
 		rotation = lerp(rotation, weapon_stats.recoil_rotation, 1)
 
 func _create_bullet_hole() -> void:

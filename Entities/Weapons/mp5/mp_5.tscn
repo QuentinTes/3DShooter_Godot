@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c3u81lsx03lht"]
+[gd_scene load_steps=16 format=3 uid="uid://c3u81lsx03lht"]
 
 [ext_resource type="Script" uid="uid://boo74sqaskcoo" path="res://Entities/Weapons/gun_script.gd" id="1_31dgl"]
 [ext_resource type="PackedScene" uid="uid://civymoba1ntku" path="res://Entities/Weapons/mp5/mp5_model.gltf" id="2_8onps"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dcftkelqa3slq" path="res://Entities/Weapons/MuzzleFlash/star_05.png" id="5_0h3r6"]
 [ext_resource type="AudioStream" uid="uid://bjjyqfbkf440t" path="res://Entities/Weapons/Gun Audio/9mm Single Isolated.wav" id="5_lmdov"]
 [ext_resource type="Script" uid="uid://dsvf7f0dbd38f" path="res://Entities/Weapons/MuzzleFlash/muzzle.gd" id="6_0h3r6"]
+[ext_resource type="AudioStream" uid="uid://bbjo6u6e1nyos" path="res://Entities/Weapons/Gun Audio/hit-marker.mp3" id="8_e8kj0"]
 
 [sub_resource type="Gradient" id="Gradient_0h3r6"]
 offsets = PackedFloat32Array(0, 0.7362205, 1)
@@ -49,22 +50,24 @@ proximity_fade_distance = 0.1
 [sub_resource type="QuadMesh" id="QuadMesh_ac0kd"]
 material = SubResource("StandardMaterial3D_5t2mu")
 
-[node name="MP5" type="Node3D" node_paths=PackedStringArray("muzzle", "fire_rate_timer", "audio", "emitter")]
+[node name="MP5" type="Node3D" node_paths=PackedStringArray("muzzle", "fire_rate_timer", "audio", "hit_audio", "emitter")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 script = ExtResource("1_31dgl")
 bullet = ExtResource("2_lmdov")
 muzzle = NodePath("Muzzle")
 weapon_stats = ExtResource("3_n30nn")
 fire_rate_timer = NodePath("Firerate")
-audio = NodePath("AudioStreamPlayer3D")
+audio = NodePath("GunShot")
+hit_audio = NodePath("HitAudio")
 emitter = NodePath("Muzzle/MuzzleFlash")
 
 [node name="Firerate" type="Timer" parent="."]
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("2_8onps")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.10672317, 0)
 
 [node name="Muzzle" type="Node3D" parent="." node_paths=PackedStringArray("weapon", "emitter", "light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.58707374, 0.10032715, 2.2011015e-10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.58707374, -0.004163623, 2.2011015e-10)
 script = ExtResource("6_0h3r6")
 weapon = NodePath("..")
 emitter = NodePath("MuzzleFlash")
@@ -84,5 +87,11 @@ draw_pass_1 = SubResource("QuadMesh_ac0kd")
 visible = false
 light_energy = 0.1
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+[node name="GunShot" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("5_lmdov")
+volume_db = -5.0
+
+[node name="HitAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("8_e8kj0")
+volume_db = 5.0
+playback_type = 1

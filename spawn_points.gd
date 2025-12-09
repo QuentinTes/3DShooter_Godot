@@ -13,7 +13,6 @@ func _ready() -> void:
 	for i in get_child_count():
 		if get_child(i) is Node3D:
 			spawners.append(get_child(i))
-			print(spawners)
 
 func _timeout() -> void:
 	spawn_enemy()
