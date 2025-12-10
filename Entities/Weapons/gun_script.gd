@@ -88,8 +88,6 @@ func _reload_weapon() -> void:
 		weapon_stats.total_ammo = 0
 	ui.update_ammo_label(weapon_stats.current_ammo, weapon_stats.total_ammo)
 	reloading = false
-	print(weapon_start_rotation.z)
-	print(weapon_stats.base_rotation.z)
 
 func _physics_process(_delta: float) -> void:
 	if !reloading:
@@ -109,7 +107,7 @@ func _physics_process(_delta: float) -> void:
 		_camera.fov = lerp(_camera.fov, 75.0, .1)
 
 func fire_raycast() -> void:
-	if weapon_stats.current_ammo > 0:
+	if weapon_stats.current_ammo > 0 && !reloading:
 		shoot_gun()
 		weapon_fired.emit()
 		
