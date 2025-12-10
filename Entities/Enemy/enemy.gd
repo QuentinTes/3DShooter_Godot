@@ -40,14 +40,12 @@ func _physics_process(delta: float) -> void:
 		var body: Node3D = ray.get_collider()
 		if body.is_in_group("Enemy"):
 			velocity.y = climb_speed
-	
 	if ray_cast_3d_2.is_colliding():
 		var body: Node3D = ray_cast_3d_2.get_collider()
 		if body.is_in_group("Enemy"):
 			velocity.y = climb_speed
 	if ray_cast_3d_3.is_colliding():
 		var body: Node3D = ray_cast_3d_3.get_collider()
-		print(body)
 		if body.is_in_group("Enemy"):
 			velocity.y = climb_speed
 	
